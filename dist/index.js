@@ -16085,7 +16085,8 @@ const init = () => {
 			state: status,
 			log_url: LOG_URL,
 			environment_url: url || LOG_URL,
-			description: 'Starting deployment to Vercel'
+			description: 'Starting deployment to Vercel',
+			auto_inactive: false,
 		})
 
 		return deploymentStatus.data
