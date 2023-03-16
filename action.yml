@@ -77,7 +77,11 @@ inputs:
     required: false
   WORKING_DIRECTORY:
     description: |
-      Working directory for the Vercel CLI
+      Working directory for the Vercel CLI.
+    required: false
+  FORCE:
+    description: |
+      Used to skip the build cache.
     required: false
 
 outputs:
