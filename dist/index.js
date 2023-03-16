@@ -21739,6 +21739,11 @@ const context = {
 		key: 'BUILD_ENV',
 		type: 'array'
 	}),
+	PREBUILT: parser.getInput({
+		key: 'PREBUILT',
+		type: 'boolean',
+		default: false
+	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
 	FORCE: parser.getInput({
 		key: 'FORCE',
@@ -22015,6 +22020,7 @@ const {
 	REF,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
+	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE
 } = __nccwpck_require__(4570)
@@ -22035,6 +22041,10 @@ const init = () => {
 
 		if (PRODUCTION) {
 			commandArguments.push('--prod')
+		}
+
+		if (PREBUILT) {
+			commandArguments.push('--prebuilt')
 		}
 
 		if (FORCE) {
