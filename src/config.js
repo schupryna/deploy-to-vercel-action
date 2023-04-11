@@ -148,6 +148,4 @@ core.debug(
 	)
 )
 
-console.log('context>>>>>>>>>>', context);
-
 module.exports = context
