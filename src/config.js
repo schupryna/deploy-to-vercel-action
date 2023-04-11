@@ -124,13 +124,13 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.payload.pull_request.user.login
 		context.REF = github.context.payload.pull_request.head.ref
 		context.SHA = github.context.payload.pull_request.head.sha
-		context.BRANCH = github.context.payload.pull_request.head.event.ref_name.split('/').join('-');
+		context.BRANCH = github.context.payload.pull_request.head.ref.slice(2).split('/').join('-');
 		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
 	} else {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.event.ref_name.split('/').join('-')
+		context.BRANCH = github.context.ref.slice(2).split('/').join('-')
 	}
 }
 
