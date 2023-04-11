@@ -98,7 +98,7 @@ const context = {
 const setDynamicVars = () => {
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
-	context.BRANCH = context.GITHUB_REPOSITORY.split('/').join('-');
+	context.BRANCH = context.GITHUB_REPOSITORY.slice(2).split('/').join('-');
 
 	// If running the action locally, use env vars instead of github.context
 	if (context.RUNNING_LOCAL) {
@@ -125,13 +125,13 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.payload.pull_request.user.login
 		context.REF = github.context.payload.pull_request.head.ref
 		context.SHA = github.context.payload.pull_request.head.sha
-		context.BRANCH = github.context.payload.pull_request.head.ref.split('/').join('-');
+		context.BRANCH = github.context.payload.pull_request.head.ref.slice(2).split('/').join('-');
 		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
 	} else {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.ref.substr(11).split('/').join('-')
+		context.BRANCH = github.context.ref.substr(11).slice(2).split('/').join('-')
 	}
 }
 
