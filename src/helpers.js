@@ -42,8 +42,14 @@ const removeSchema = (url) => {
 	return url.replace(regex, '')
 }
 
+const getClearedBranchName = (branch) => branch ? branch.replace('refs/heads/', '').split('/').join('-') : ''
+
+const replaceDotsToDashes = (str) => str ? str.replace(/\./g, '-') : ''
+
 module.exports = {
 	exec: execCmd,
 	addSchema,
-	removeSchema
+	removeSchema,
+	getClearedBranchName,
+	replaceDotsToDashes
 }

@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const Github = require('./github')
 const Vercel = require('./vercel')
-const { addSchema } = require('./helpers')
+const { addSchema, getClearedBranchName, replaceDotsToDashes } = require('./helpers')
 
 const {
 	GITHUB_DEPLOYMENT,
@@ -20,7 +20,8 @@ const {
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
 	IS_FORK,
-	ACTOR
+	ACTOR,
+	RELEASE_TAG
 } = require('./config')
 
 const run = async () => {
@@ -71,7 +72,8 @@ const run = async () => {
 			const alias = PR_PREVIEW_DOMAIN
 				.replace('{USER}', USER)
 				.replace('{REPO}', REPOSITORY)
-				.replace('{BRANCH}', BRANCH)
+				.replace('{BRANCH}', getClearedBranchName(BRANCH))
+				.replace('{RELEASE_TAG}', replaceDotsToDashes(RELEASE_TAG))
 				.replace('{PR}', PR_NUMBER)
 				.replace('{SHA}', SHA.substring(0, 7))
 				.toLowerCase()
@@ -88,7 +90,8 @@ const run = async () => {
 				const alias = ALIAS_DOMAINS[i]
 					.replace('{USER}', USER)
 					.replace('{REPO}', REPOSITORY)
-					.replace('{BRANCH}', BRANCH)
+					.replace('{BRANCH}', getClearedBranchName(BRANCH))
+					.replace('{RELEASE_TAG}', replaceDotsToDashes(RELEASE_TAG))
 					.replace('{SHA}', SHA.substring(0, 7))
 					.toLowerCase()
 

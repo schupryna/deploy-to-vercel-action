@@ -74,27 +74,28 @@ With the `v1` tag you will always get the latest non-breaking version which will
 
 Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) takes:
 
-| Key | Value | Required | Default |
-| ------------- | ------------- | ------------- | ------------- |
-| `GITHUB_TOKEN` | GitHub Token to use when creating deployment and comment (more info [below](#tokens)) | **Yes** | N/A |
-| `VERCEL_TOKEN` | Vercel Token to use with the Vercel CLI (more info [below](#tokens)) | **Yes** | N/A |
-| `VERCEL_ORG_ID` | Id of your Vercel Organisation (more info [below](#vercel-project)) | **Yes** | N/A |
-| `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
-| `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
-| `GITHUB_DEPLOYMENT_ENV` | Custom environment for the GitHub deployment. | **No** | `Production` or `Preview` |
-| `PRODUCTION` | Create a production deployment on Vercel and GitHub | **No** | true (false for PR deployments) |
-| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
-| `CREATE_COMMENT` | Create PR comment when deploying | **No** | true |
-| `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
-| `TRIM_COMMIT_MESSAGE` | When passing meta data to Vercel deployment, trim the commit message to subject only | **No** | false |
-| `DEPLOY_PR_FROM_FORK` | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr-made-from-a-fork-or-dependabot)) | **No** | false |
-| `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | `deployed` |
-| `ALIAS_DOMAINS` | Alias domain(s) to assign to the deployment (more info [below](#custom-domains)) | **No** | N/A |
-| `PR_PREVIEW_DOMAIN` | Custom preview domain for PRs (more info [below](#custom-domains)) | **No** | N/A |
-| `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
-| `BUILD_ENV` | Provide environment variables to the build step | **No** | N/A |
-| `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
-| `FORCE` | Used to skip the build cache. | **No** | false
+| Key                       | Value                                                                                                                    | Required | Default                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------- |
+| `GITHUB_TOKEN`            | GitHub Token to use when creating deployment and comment (more info [below](#tokens))                                    | **Yes**  | N/A                             |
+| `VERCEL_TOKEN`            | Vercel Token to use with the Vercel CLI (more info [below](#tokens))                                                     | **Yes**  | N/A                             |
+| `VERCEL_ORG_ID`           | Id of your Vercel Organisation (more info [below](#vercel-project))                                                      | **Yes**  | N/A                             |
+| `VERCEL_PROJECT_ID`       | Id of your Vercel project (more info [below](#vercel-project))                                                           | **Yes**  | N/A                             |
+| `GITHUB_DEPLOYMENT`       | Create a deployment on GitHub                                                                                            | **No**   | true                            |
+| `GITHUB_DEPLOYMENT_ENV`   | Custom environment for the GitHub deployment.                                                                            | **No**   | `Production` or `Preview`       |
+| `PRODUCTION`              | Create a production deployment on Vercel and GitHub                                                                      | **No**   | true (false for PR deployments) |
+| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR                                                                           | **No**   | true                            |
+| `CREATE_COMMENT`          | Create PR comment when deploying                                                                                         | **No**   | true                            |
+| `ATTACH_COMMIT_METADATA`  | Attach metadata about the commit to the Vercel deployment                                                                | **No**   | true                            |
+| `TRIM_COMMIT_MESSAGE`     | When passing meta data to Vercel deployment, trim the commit message to subject only                                     | **No**   | false                           |
+| `DEPLOY_PR_FROM_FORK`     | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr-made-from-a-fork-or-dependabot)) | **No**   | false                           |
+| `PR_LABELS`               | Labels which will be added to the pull request once deployed. Set it to false to turn off                                | **No**   | `deployed`                      |
+| `ALIAS_DOMAINS`           | Alias domain(s) to assign to the deployment (more info [below](#custom-domains))                                         | **No**   | N/A                             |
+| `PR_PREVIEW_DOMAIN`       | Custom preview domain for PRs (more info [below](#custom-domains))                                                       | **No**   | N/A                             |
+| `VERCEL_SCOPE`            | Execute commands from a different Vercel team or user                                                                    | **No**   | N/A                             |
+| `BUILD_ENV`               | Provide environment variables to the build step                                                                          | **No**   | N/A                             |
+| `WORKING_DIRECTORY`       | Working directory for the Vercel CLI                                                                                     | **No**   | N/A                             |
+| `FORCE`                   | Used to skip the build cache.                                                                                            | **No**   | false                           |
+| `RELEASE_TAG`             | Release tag for using as output.                                                                                         | **No**   | N/A                             |
 
 ## 🛠️ Configuration
 
@@ -129,12 +130,15 @@ ALIAS_DOMAINS: |
 ```
 
 #### Pro Teams
-If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team. 
+
+If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team.
+
 ```yml
 with:
-  VERCEL_SCOPE: 'your-team-slug'
+  VERCEL_SCOPE: "your-team-slug"
 ```
-Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail. 
+
+Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail.
 Even if you extend the scope of `VERCEL_TOKEN` to `All non-SAML Team`, without properly set up `VERCEL_SCOPE` the cli will use default account and fail.
 
 > **Note:** You can use `*.vercel.app` or `*.now.sh` without configuration, but any other custom domain needs to be configured in the Vercel Dashboard first
@@ -143,9 +147,10 @@ You can also use any of the following variables anywhere in the domain:
 
 - `{USER}` - the owner of the repository the action was executed in
 - `{REPO}` - the name of the repository the action was executed in
-- `{BRANCH}` - the branch in which the action was triggered
+- `{BRANCH}` - the branch in which the action was triggered (slashes replaced with dashes)
 - `{SHA}` - the most recent commit's sha
 - `{PR}` - the number of the pr the action was triggered from
+- `{RELEASE_TAG}` - transformed input RELEASE_TAG: dots replaced with dashes
 
 Examples:
 
@@ -254,7 +259,7 @@ The workflow below will run on every push to the staging branch. The Action will
 name: Deploy staging CI
 on:
   push:
-    branches: [ staging ]
+    branches: [staging]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -413,7 +418,7 @@ jobs:
 
             [View Workflow Logs](${ LOG_URL })
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_IDENTIFIER: 'vercel-deploy'
+          COMMENT_IDENTIFIER: "vercel-deploy"
 ```
 
 ### Deploy on schedule
@@ -428,7 +433,7 @@ The workflow below will run at the given interval and deploy your project to Ver
 name: Deploy CI
 on:
   schedule:
-    - cron:  '0 8 * * 1' # will run every Monday at 8 am
+    - cron: "0 8 * * 1" # will run every Monday at 8 am
 jobs:
   deploy:
     runs-on: ubuntu-latest

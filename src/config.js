@@ -68,6 +68,9 @@ const context = {
 	VERCEL_SCOPE: parser.getInput({
 		key: 'VERCEL_SCOPE'
 	}),
+	RELEASE_TAG: parser.getInput({
+		key: 'RELEASE_TAG'
+	}),
 	GITHUB_REPOSITORY: parser.getInput({
 		key: 'GITHUB_REPOSITORY',
 		required: true
@@ -124,13 +127,13 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.payload.pull_request.user.login
 		context.REF = github.context.payload.pull_request.head.ref
 		context.SHA = github.context.payload.pull_request.head.sha
-		context.BRANCH = github.context.payload.pull_request.head.ref
+		context.BRANCH = context.REF
 		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
 	} else {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.ref.substr(11)
+		context.BRANCH = github.context.ref
 	}
 }
 
