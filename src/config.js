@@ -98,6 +98,7 @@ const context = {
 const setDynamicVars = () => {
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
+	context.BRANCH = context.GITHUB_REPOSITORY.split('/').join('-');
 
 	// If running the action locally, use env vars instead of github.context
 	if (context.RUNNING_LOCAL) {
