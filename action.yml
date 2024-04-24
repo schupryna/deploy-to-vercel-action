@@ -90,9 +90,9 @@ inputs:
 
 outputs:
   PREVIEW_URL:
-    description: "Main deployment preview URL"
+    description: "Main deployment preview URL."
   DEPLOYMENT_URLS:
-    description: "All assigned deployment URLs"
+    description: "All assigned deployment URLs."
   DEPLOYMENT_CREATED:
     description: "True if a Vercel deployment was created."
   COMMENT_CREATED:

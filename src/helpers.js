@@ -1,55 +1,56 @@
-const core = require('@actions/core')
-const { spawn } = require('child_process')
+const core = require("@actions/core");
+const { spawn } = require("child_process");
 
 const execCmd = (command, args, cwd) => {
-	core.debug(`EXEC: "${ command } ${ args }" in ${ cwd || '.' }`)
-	return new Promise((resolve, reject) => {
-		const process = spawn(command, args, { cwd })
-		let stdout
-		let stderr
+  core.debug(`EXEC: "${command} ${args}" in ${cwd || "."}`);
+  return new Promise((resolve, reject) => {
+    const process = spawn(command, args, { cwd });
+    let stdout;
+    let stderr;
 
-		process.stdout.on('data', (data) => {
-			core.debug(data.toString())
-			if (data !== undefined && data.length > 0) {
-				stdout += data
-			}
-		})
+    process.stdout.on("data", (data) => {
+      core.debug(data.toString());
+      if (data !== undefined && data.length > 0) {
+        stdout += data;
+      }
+    });
 
-		process.stderr.on('data', (data) => {
-			core.debug(data.toString())
-			if (data !== undefined && data.length > 0) {
-				stderr += data
-			}
-		})
+    process.stderr.on("data", (data) => {
+      core.debug(data.toString());
+      if (data !== undefined && data.length > 0) {
+        stderr += data;
+      }
+    });
 
-		process.on('close', (code) => {
-			code !== 0 ? reject(new Error(stderr)) : resolve(stdout.trim())
-		})
-	})
-}
+    process.on("close", (code) => {
+      code !== 0 ? reject(new Error(stderr)) : resolve(stdout?.trim());
+    });
+  });
+};
 
 const addSchema = (url) => {
-	const regex = /^https?:\/\//
-	if (!regex.test(url)) {
-		return `https://${ url }`
-	}
+  const regex = /^https?:\/\//;
+  if (!regex.test(url)) {
+    return `https://${url}`;
+  }
 
-	return url
-}
+  return url;
+};
 
 const removeSchema = (url) => {
-	const regex = /^https?:\/\//
-	return url.replace(regex, '')
-}
+  const regex = /^https?:\/\//;
+  return url.replace(regex, "");
+};
 
-const getClearedBranchName = (branch) => branch ? branch.replace('refs/heads/', '').split('/').join('-') : ''
+const getClearedBranchName = (branch) =>
+  branch ? branch.replace("refs/heads/", "").split("/").join("-") : "";
 
-const replaceDotsToDashes = (str) => str ? str.replace(/\./g, '-') : ''
+const replaceDotsToDashes = (str) => (str ? str.replace(/\./g, "-") : "");
 
 module.exports = {
-	exec: execCmd,
-	addSchema,
-	removeSchema,
-	getClearedBranchName,
-	replaceDotsToDashes
-}
+  exec: execCmd,
+  addSchema,
+  removeSchema,
+  getClearedBranchName,
+  replaceDotsToDashes,
+};
