@@ -128,6 +128,7 @@ const run = async () => {
       }
 
       for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
+        core.info(`alias domain: ${ALIAS_DOMAINS[i]}`);
         const alias = ALIAS_DOMAINS[i]
           ?.replace("{USER}", urlSafeParameter(USER))
           ?.replace("{REPO}", urlSafeParameter(REPOSITORY))
