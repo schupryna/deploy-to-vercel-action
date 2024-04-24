@@ -16051,132 +16051,141 @@ module.exports = context;
 /***/ 8396:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const github = __nccwpck_require__(5438)
+const github = __nccwpck_require__(5438);
 
 const {
-	GITHUB_TOKEN,
-	USER,
-	REPOSITORY,
-	PRODUCTION,
-	PR_NUMBER,
-	REF,
-	LOG_URL,
-	PR_LABELS,
-	GITHUB_DEPLOYMENT_ENV
-} = __nccwpck_require__(4570)
+  GITHUB_TOKEN,
+  USER,
+  REPOSITORY,
+  PRODUCTION,
+  PR_NUMBER,
+  REF,
+  LOG_URL,
+  PR_LABELS,
+  GITHUB_DEPLOYMENT_ENV,
+} = __nccwpck_require__(4570);
 
 const init = () => {
-	const client = github.getOctokit(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
+  const client = github.getOctokit(GITHUB_TOKEN, {
+    previews: ["flash", "ant-man"],
+  });
 
-	let deploymentId
+  let deploymentId;
 
-	const createDeployment = async () => {
-		const deployment = await client.repos.createDeployment({
-			owner: USER,
-			repo: REPOSITORY,
-			ref: REF,
-			required_contexts: [],
-			environment: GITHUB_DEPLOYMENT_ENV || (PRODUCTION ? 'Production' : 'Preview'),
-			description: 'Deploy to Vercel',
-			auto_merge: false
-		})
+  const createDeployment = async () => {
+    const deployment = await client.repos.createDeployment({
+      owner: USER,
+      repo: REPOSITORY,
+      ref: REF,
+      required_contexts: [],
+      environment:
+        GITHUB_DEPLOYMENT_ENV || (PRODUCTION ? "Production" : "Preview"),
+      description: "Deploy to Vercel",
+      auto_merge: false,
+    });
 
-		deploymentId = deployment.data.id
+    deploymentId = deployment.data.id;
 
-		return deployment.data
-	}
+    return deployment.data;
+  };
 
-	const updateDeployment = async (status, url) => {
-		if (!deploymentId) return
+  const updateDeployment = async (status, url) => {
+    if (!deploymentId) return;
 
-		const deploymentStatus = await client.repos.createDeploymentStatus({
-			owner: USER,
-			repo: REPOSITORY,
-			deployment_id: deploymentId,
-			state: status,
-			log_url: LOG_URL,
-			environment_url: url || LOG_URL,
-			description: 'Starting deployment to Vercel',
-			auto_inactive: false,
-		})
+    const deploymentStatus = await client.repos.createDeploymentStatus({
+      owner: USER,
+      repo: REPOSITORY,
+      deployment_id: deploymentId,
+      state: status,
+      log_url: LOG_URL,
+      environment_url: url || LOG_URL,
+      description: "Starting deployment to Vercel",
+      auto_inactive: false,
+    });
 
-		return deploymentStatus.data
-	}
+    return deploymentStatus.data;
+  };
 
-	const deleteExistingComment = async () => {
-		const { data } = await client.issues.listComments({
-			owner: USER,
-			repo: REPOSITORY,
-			issue_number: PR_NUMBER
-		})
+  const deleteExistingComment = async () => {
+    const { data } = await client.issues.listComments({
+      owner: USER,
+      repo: REPOSITORY,
+      issue_number: PR_NUMBER,
+    });
 
-		if (data.length < 1) return
+    if (data.length < 1) return;
 
-		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
-		if (comment) {
-			await client.issues.deleteComment({
-				owner: USER,
-				repo: REPOSITORY,
-				comment_id: comment.id
-			})
+    const comment = data.find((comment) =>
+      comment.body.includes("This pull request has been deployed to Vercel.")
+    );
+    if (comment) {
+      await client.issues.deleteComment({
+        owner: USER,
+        repo: REPOSITORY,
+        comment_id: comment.id,
+      });
 
-			return comment.id
-		}
-	}
+      return comment.id;
+    }
+  };
 
-	const createComment = async (body) => {
-		// Remove indentation
-		const dedented = body.replace(/^[^\S\n]+/gm, '')
+  const createComment = async (body) => {
+    let dedented;
+    // Remove indentation
+    if (body) {
+      dedented = body.replace(/^[^\S\n]+/gm, "");
+    }
 
-		const comment = await client.issues.createComment({
-			owner: USER,
-			repo: REPOSITORY,
-			issue_number: PR_NUMBER,
-			body: dedented
-		})
+    const comment = await client.issues.createComment({
+      owner: USER,
+      repo: REPOSITORY,
+      issue_number: PR_NUMBER,
+      body: dedented,
+    });
 
-		return comment.data
-	}
+    return comment.data;
+  };
 
-	const addLabel = async () => {
-		const label = await client.issues.addLabels({
-			owner: USER,
-			repo: REPOSITORY,
-			issue_number: PR_NUMBER,
-			labels: PR_LABELS
-		})
+  const addLabel = async () => {
+    const label = await client.issues.addLabels({
+      owner: USER,
+      repo: REPOSITORY,
+      issue_number: PR_NUMBER,
+      labels: PR_LABELS,
+    });
 
-		return label.data
-	}
+    return label.data;
+  };
 
-	const getCommit = async () => {
-		const { data } = await client.repos.getCommit({
-			owner: USER,
-			repo: REPOSITORY,
-			ref: REF
-		})
+  const getCommit = async () => {
+    const { data } = await client.repos.getCommit({
+      owner: USER,
+      repo: REPOSITORY,
+      ref: REF,
+    });
 
-		return {
-			authorName: data.commit.author.name,
-			authorLogin: data.author.login,
-			commitMessage: data.commit.message
-		}
-	}
+    return {
+      authorName: data.commit.author.name,
+      authorLogin: data.author.login,
+      commitMessage: data.commit.message,
+    };
+  };
 
-	return {
-		client,
-		createDeployment,
-		updateDeployment,
-		deleteExistingComment,
-		createComment,
-		addLabel,
-		getCommit
-	}
-}
+  return {
+    client,
+    createDeployment,
+    updateDeployment,
+    deleteExistingComment,
+    createComment,
+    addLabel,
+    getCommit,
+  };
+};
 
 module.exports = {
-	init
-}
+  init,
+};
+
 
 /***/ }),
 
@@ -16224,13 +16233,13 @@ const addSchema = (url) => {
 
 const removeSchema = (url) => {
   const regex = /^https?:\/\//;
-  return url.replace(regex, "");
+  return url?.replace(regex, "");
 };
 
 const getClearedBranchName = (branch) =>
-  branch ? branch.replace("refs/heads/", "").split("/").join("-") : "";
+  branch ? branch?.replace("refs/heads/", "").split("/").join("-") : "";
 
-const replaceDotsToDashes = (str) => (str ? str.replace(/\./g, "-") : "");
+const replaceDotsToDashes = (str) => (str ? str?.replace(/\./g, "-") : "");
 
 module.exports = {
   exec: execCmd,
@@ -16593,7 +16602,7 @@ const {
 } = __nccwpck_require__(4570);
 
 // Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
-const urlSafeParameter = (input) => input.replace(/[^a-z0-9_~]/gi, "-");
+const urlSafeParameter = (input) => input?.replace(/[^a-z0-9_~]/gi, "-") || "";
 
 const run = async () => {
   const github = Github.init();
@@ -16646,15 +16655,15 @@ const run = async () => {
         throw new Error(`invalid type for PR_PREVIEW_DOMAIN`);
       }
 
-      const alias = PR_PREVIEW_DOMAIN.replace("{USER}", urlSafeParameter(USER))
-        .replace("{REPO}", urlSafeParameter(REPOSITORY))
-        .replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
-        .replace(
+      const alias = PR_PREVIEW_DOMAIN?.replace("{USER}", urlSafeParameter(USER))
+        ?.replace("{REPO}", urlSafeParameter(REPOSITORY))
+        ?.replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
+        ?.replace(
           "{RELEASE_TAG}",
           replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
         )
-        .replace("{PR}", PR_NUMBER)
-        .replace("{SHA}", SHA.substring(0, 7))
+        ?.replace("{PR}", PR_NUMBER)
+        ?.replace("{SHA}", SHA.substring(0, 7))
         .toLowerCase();
 
       const previewDomainSuffix = ".vercel.app";
@@ -16692,14 +16701,14 @@ const run = async () => {
 
       for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
         const alias = ALIAS_DOMAINS[i]
-          .replace("{USER}", urlSafeParameter(USER))
-          .replace("{REPO}", urlSafeParameter(REPOSITORY))
-          .replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
-          .replace(
+          ?.replace("{USER}", urlSafeParameter(USER))
+          ?.replace("{REPO}", urlSafeParameter(REPOSITORY))
+          ?.replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
+          ?.replace(
             "{RELEASE_TAG}",
             replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
           )
-          .replace("{SHA}", SHA.substring(0, 7))
+          ?.replace("{SHA}", SHA.substring(0, 7))
           .toLowerCase();
 
         await vercel.assignAlias(alias);

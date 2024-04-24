@@ -30,7 +30,7 @@ const {
 } = require("./config");
 
 // Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
-const urlSafeParameter = (input) => input.replace(/[^a-z0-9_~]/gi, "-");
+const urlSafeParameter = (input) => input?.replace(/[^a-z0-9_~]/gi, "-") || "";
 
 const run = async () => {
   const github = Github.init();
@@ -83,15 +83,15 @@ const run = async () => {
         throw new Error(`invalid type for PR_PREVIEW_DOMAIN`);
       }
 
-      const alias = PR_PREVIEW_DOMAIN.replace("{USER}", urlSafeParameter(USER))
-        .replace("{REPO}", urlSafeParameter(REPOSITORY))
-        .replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
-        .replace(
+      const alias = PR_PREVIEW_DOMAIN?.replace("{USER}", urlSafeParameter(USER))
+        ?.replace("{REPO}", urlSafeParameter(REPOSITORY))
+        ?.replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
+        ?.replace(
           "{RELEASE_TAG}",
           replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
         )
-        .replace("{PR}", PR_NUMBER)
-        .replace("{SHA}", SHA.substring(0, 7))
+        ?.replace("{PR}", PR_NUMBER)
+        ?.replace("{SHA}", SHA.substring(0, 7))
         .toLowerCase();
 
       const previewDomainSuffix = ".vercel.app";
@@ -129,14 +129,14 @@ const run = async () => {
 
       for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
         const alias = ALIAS_DOMAINS[i]
-          .replace("{USER}", urlSafeParameter(USER))
-          .replace("{REPO}", urlSafeParameter(REPOSITORY))
-          .replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
-          .replace(
+          ?.replace("{USER}", urlSafeParameter(USER))
+          ?.replace("{REPO}", urlSafeParameter(REPOSITORY))
+          ?.replace("{BRANCH}", getClearedBranchName(urlSafeParameter(BRANCH)))
+          ?.replace(
             "{RELEASE_TAG}",
             replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
           )
-          .replace("{SHA}", SHA.substring(0, 7))
+          ?.replace("{SHA}", SHA.substring(0, 7))
           .toLowerCase();
 
         await vercel.assignAlias(alias);

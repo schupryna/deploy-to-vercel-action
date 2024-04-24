@@ -39,13 +39,13 @@ const addSchema = (url) => {
 
 const removeSchema = (url) => {
   const regex = /^https?:\/\//;
-  return url.replace(regex, "");
+  return url?.replace(regex, "");
 };
 
 const getClearedBranchName = (branch) =>
-  branch ? branch.replace("refs/heads/", "").split("/").join("-") : "";
+  branch ? branch?.replace("refs/heads/", "").split("/").join("-") : "";
 
-const replaceDotsToDashes = (str) => (str ? str.replace(/\./g, "-") : "");
+const replaceDotsToDashes = (str) => (str ? str?.replace(/\./g, "-") : "");
 
 module.exports = {
   exec: execCmd,
