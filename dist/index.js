@@ -16663,7 +16663,7 @@ const run = async () => {
           replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
         )
         ?.replace("{PR}", PR_NUMBER)
-        ?.replace("{SHA}", SHA.substring(0, 7))
+        ?.replace("{SHA}", SHA.substring(0, 10))
         .toLowerCase();
 
       const previewDomainSuffix = ".vercel.app";
@@ -16700,6 +16700,7 @@ const run = async () => {
       }
 
       for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
+        core.info(`alias domain: ${ALIAS_DOMAINS[i]}`);
         const alias = ALIAS_DOMAINS[i]
           ?.replace("{USER}", urlSafeParameter(USER))
           ?.replace("{REPO}", urlSafeParameter(REPOSITORY))
@@ -16708,7 +16709,7 @@ const run = async () => {
             "{RELEASE_TAG}",
             replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
           )
-          ?.replace("{SHA}", SHA.substring(0, 7))
+          ?.replace("{SHA}", SHA.substring(0, 10))
           .toLowerCase();
 
         await vercel.assignAlias(alias);
@@ -16747,7 +16748,7 @@ const run = async () => {
 					<table>
 						<tr>
 							<td><strong>Latest commit:</strong></td>
-							<td><code>${SHA.substring(0, 7)}</code></td>
+							<td><code>${SHA.substring(0, 10)}</code></td>
 						</tr>
 						<tr>
 							<td><strong>✅ Preview:</strong></td>
