@@ -14,7 +14,7 @@ const {
   REPOSITORY,
   BRANCH,
   PR_NUMBER,
-  SHA,
+  SHA: _SHA,
   IS_PR,
   PR_LABELS,
   CREATE_COMMENT,
@@ -31,6 +31,8 @@ const {
 
 // Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
 const urlSafeParameter = (input) => input?.replace(/[^a-z0-9_~]/gi, "-") || "";
+
+const SHA = _SHA.substring(0, 10);
 
 const run = async () => {
   const github = Github.init();
@@ -91,7 +93,7 @@ const run = async () => {
           replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
         )
         ?.replace("{PR}", PR_NUMBER)
-        ?.replace("{SHA}", SHA.substring(0, 10))
+        ?.replace("{SHA}", SHA)
         .toLowerCase();
 
       const previewDomainSuffix = ".vercel.app";
@@ -137,7 +139,7 @@ const run = async () => {
             "{RELEASE_TAG}",
             replaceDotsToDashes(urlSafeParameter(RELEASE_TAG))
           )
-          ?.replace("{SHA}", SHA.substring(0, 10))
+          ?.replace("{SHA}", SHA)
           .toLowerCase();
 
         await vercel.assignAlias(alias);
@@ -176,7 +178,7 @@ const run = async () => {
 					<table>
 						<tr>
 							<td><strong>Latest commit:</strong></td>
-							<td><code>${SHA.substring(0, 10)}</code></td>
+							<td><code>${SHA}</code></td>
 						</tr>
 						<tr>
 							<td><strong>✅ Preview:</strong></td>
